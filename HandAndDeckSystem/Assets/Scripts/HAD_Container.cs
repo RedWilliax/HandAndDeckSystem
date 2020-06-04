@@ -2,32 +2,48 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HAD_Container : MonoBehaviour
+public class HAD_Container
 {
 
-    List<HAD_Card> cards = new List<HAD_Card>();
+    protected List<HAD_Card> cards = new List<HAD_Card>();
 
-    [SerializeField, Range(1, 1000)] int maxCards = 10;
+    [SerializeField, Range(1, 1000)]protected int maxCards = 10;
+
+    public HAD_Container(int maxCards)
+    {
+        this.maxCards = maxCards;
+    }
 
     public int CardQuantity => cards.Count;
+    public bool IsFull => CardQuantity >= maxCards;
+
+    public List<HAD_Card> Cards => cards;
 
     #region Handler
 
-    public bool AddCard(HAD_Card _card)
+    public virtual HAD_Card GetCard()
     {
-        if (CardQuantity <= maxCards)
-            cards.Add(_card);
-
-        return CardQuantity <= maxCards;
+        return cards[Random.Range(0, CardQuantity - 1)];
     }
 
-    public bool RemoveCard(HAD_Card _card)
+    public virtual bool AddCard(HAD_Card _card)
+    {
+        if (CardQuantity < maxCards)
+            cards.Add(_card);
+
+        return CardQuantity < maxCards;
+    }
+
+    public virtual bool RemoveCard(HAD_Card _card)
     {
         if (CardQuantity > 0)
             cards.Remove(_card);
 
         return CardQuantity > 0;
     }
+
+    
+
 
     #endregion
 
