@@ -8,7 +8,7 @@ public class HAD_Player : MonoBehaviour
 {
     [SerializeField, Range(0, 180)] float angleHand = 90;
 
-    [SerializeField, Range(0, 5)] float distHandCard = 1;
+    [SerializeField, Range(0, 10)] float distHandCard = 1;
 
     HAD_Hand hand = null;
 
@@ -44,9 +44,9 @@ public class HAD_Player : MonoBehaviour
             float _x = Mathf.Cos((_angle + _angleBetweenEachCard * i) * Mathf.Deg2Rad) * distHandCard;
             float _z = Mathf.Sin((_angle + _angleBetweenEachCard * i) * Mathf.Deg2Rad) * distHandCard;
 
-            hand.Cards[i].SetPositon(new Vector3(transform.position.x, transform.position.y + i / 10.0f + 0.1f, transform.position.z) + new Vector3(_x, 0, _z));
+            hand.Cards[i].SetPositon(new Vector3(transform.position.x, transform.position.y + i / 10.0f + 0.1f, transform.position.z) + new Vector3(_x * 1.3f, 0, _z * 0.6f + distHandCard));
 
-            hand.Cards[i].LookAt(transform.position);
+            hand.Cards[i].LookAt(new  Vector3(transform.position.x + (_x * 0.9f), transform.position.y, transform.position.z));
         }
     }
 
