@@ -6,9 +6,9 @@ using UnityEngine;
 
 public class HAD_Player : MonoBehaviour
 {
-    [SerializeField, Range(0, 180)] float angleHand = 90;
-
-    [SerializeField, Range(0, 10)] float distHandCard = 1;
+    [SerializeField, Range(-10, 10)] float distHandCard = 0;
+    [SerializeField, Range(0, 10)] float cardShift = 1;
+    [SerializeField, Range(0, 1)] float cardStackHeight = 0.1f;
 
     HAD_Hand hand = null;
 
@@ -20,9 +20,11 @@ public class HAD_Player : MonoBehaviour
 
         deck = new HAD_Deck(HAD_GameManager.Instance.MaxCardDeck);
 
-        deck.FillDeck(HAD_GameManager.Instance.PreMadeDeck);
-
         hand.OnDrawCard += SetPosHandCard;
+
+        if (HAD_GameManager.Instance.makePreMadeDeck)
+            deck.FillDeck(HAD_GameManager.Instance.PreMadeDeck);
+
 
     }
 
@@ -35,19 +37,9 @@ public class HAD_Player : MonoBehaviour
 
     void SetPosHandCard()
     {
-        float _angle = angleHand / hand.CardQuantity;
-
-        float _angleBetweenEachCard = _angle * 2;
-
         for (int i = 0; i < hand.CardQuantity; i++)
-        {
-            float _x = Mathf.Cos((_angle + _angleBetweenEachCard * i) * Mathf.Deg2Rad) * distHandCard;
-            float _z = Mathf.Sin((_angle + _angleBetweenEachCard * i) * Mathf.Deg2Rad) * distHandCard;
+            hand.Cards[i].SetPositon(new Vector3(transform.position.x + i + distHandCard, (i + 1) * cardStackHeight, 0) + transform.position);
 
-            hand.Cards[i].SetPositon(new Vector3(transform.position.x, transform.position.y + i / 10.0f + 0.1f, transform.position.z) + new Vector3(_x * 1.3f, 0, _z * 0.6f + distHandCard));
-
-            hand.Cards[i].LookAt(new  Vector3(transform.position.x + (_x * 0.9f), transform.position.y, transform.position.z));
-        }
     }
 
     private void OnGUI()

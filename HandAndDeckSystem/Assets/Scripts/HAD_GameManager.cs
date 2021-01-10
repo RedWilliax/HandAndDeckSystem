@@ -11,7 +11,7 @@ public class HAD_GameManager : MonoBehaviour
     [SerializeField, Range(1, 100)] int maxCardHand = 10;
     [SerializeField, Range(1, 100)] int maxCardDeck = 30;
 
-    [SerializeField] bool makePreMadeDeck = false;
+    [SerializeField] public bool makePreMadeDeck = false;
     [SerializeField] string pathPreMadeDeck = "Card_Generic";
     HAD_Deck preMadeDeck = null;
     public int MaxCardHand => maxCardHand;
