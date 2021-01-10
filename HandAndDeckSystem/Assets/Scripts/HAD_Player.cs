@@ -24,8 +24,6 @@ public class HAD_Player : MonoBehaviour
 
         if (HAD_GameManager.Instance.makePreMadeDeck)
             deck.FillDeck(HAD_GameManager.Instance.PreMadeDeck);
-
-
     }
 
     void DrawCard()
@@ -39,7 +37,6 @@ public class HAD_Player : MonoBehaviour
     {
         for (int i = 0; i < hand.CardQuantity; i++)
             hand.Cards[i].SetPositon(new Vector3(transform.position.x + i + distHandCard, (i + 1) * cardStackHeight, 0) + transform.position);
-
     }
 
     private void OnGUI()
