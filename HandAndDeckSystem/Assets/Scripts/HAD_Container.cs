@@ -23,7 +23,7 @@ public class HAD_Container
 
     public virtual HAD_Card GetCard()
     {
-        return cards[Random.Range(0, CardQuantity - 1)];
+        return cards[Random.Range(0, CardQuantity)];
     }
 
     public virtual bool AddCard(HAD_Card _card)

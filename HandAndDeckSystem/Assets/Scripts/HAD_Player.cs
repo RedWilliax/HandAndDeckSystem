@@ -23,7 +23,7 @@ public class HAD_Player : MonoBehaviour
         hand.OnDrawCard += SetPosHandCard;
 
         if (HAD_GameManager.Instance.makePreMadeDeck)
-            deck.FillDeck(HAD_GameManager.Instance.PreMadeDeck);
+            deck.FillDeck(HAD_GameManager.Instance.CurrentDeck);
     }
 
     void DrawCard()
