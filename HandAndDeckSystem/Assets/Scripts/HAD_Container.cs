@@ -16,6 +16,7 @@ public class HAD_Container
 
     public int CardQuantity => cards.Count;
     public bool IsFull => CardQuantity >= maxCards;
+    public bool IsEmpty => CardQuantity <= 0;
 
     public List<HAD_Card> Cards => cards;
 

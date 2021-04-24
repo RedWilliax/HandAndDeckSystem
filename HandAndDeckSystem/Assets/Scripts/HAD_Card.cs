@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
+//Rename class
 public class HAD_Card : MonoBehaviour, HAD_IActionCard, HAD_ICostCard, HAD_ILifeCard, HAD_IAttackCard
 {
     public static event Action OnDieCard = null;
@@ -19,17 +20,26 @@ public class HAD_Card : MonoBehaviour, HAD_IActionCard, HAD_ICostCard, HAD_ILife
 
     public string Name => name;
 
-    public int Cost { get => cost; set => cost = value; }
+    public int Cost 
+    { 
+        get => cost; 
+        set => cost = value <= 0 ? 0 : value; 
+    }
     public int Life
     {
         get => life;
         set
         {
-            life = value;
+            life = value <= 0 ? 0 : value;
             if (life <= 0) OnDieCard?.Invoke();
         }
     }
-    public int Attack { get => attack; set => attack = value; }
+    public int Attack 
+    { 
+        get => attack; 
+
+        set => attack = value <= 0 ? 0 : value; 
+    }
 
     public bool IsValid => sprite;
 

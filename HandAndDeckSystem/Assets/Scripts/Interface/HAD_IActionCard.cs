@@ -4,6 +4,5 @@ using UnityEngine;
 
 public interface HAD_IActionCard
 {
-
     void ActionCard();
 }

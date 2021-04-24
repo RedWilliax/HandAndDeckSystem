@@ -49,10 +49,18 @@ public class HAD_Player : MonoBehaviour
 
         if (hand.IsFull)
             GUILayout.Label($"Hand is full !");
+        else if (hand.IsEmpty)
+            GUILayout.Label($"Hand is Empty.");
         else
         {
             if (GUILayout.Button("DrawCard"))
                 DrawCard();
+        }
+
+        if (GUILayout.Button("O/C Inventory"))
+        {
+            Debug.Log("O/C Inventory");
+
         }
 
         GUILayout.EndArea();
