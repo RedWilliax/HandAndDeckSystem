@@ -7,12 +7,14 @@ using UnityEngine;
 public class HAD_Player : MonoBehaviour
 {
     [SerializeField, Range(-10, 10)] float distHandCard = 0;
-    [SerializeField, Range(0, 10)] float cardShift = 1;
+    [SerializeField, Range(-10, 10)] float cardShift = 1;
     [SerializeField, Range(0, 1)] float cardStackHeight = 0.1f;
 
     HAD_Hand hand = null;
 
     HAD_Deck deck = null;
+
+    public HAD_Hand Hand => hand;
 
     private void Start()
     {
@@ -21,6 +23,7 @@ public class HAD_Player : MonoBehaviour
         deck = new HAD_Deck(HAD_GameManager.Instance.MaxCardDeck);
 
         hand.OnDrawCard += SetPosHandCard;
+        hand.OnTakeCard += SetPosHandCard;
 
         if (HAD_GameManager.Instance.makePreMadeDeck)
             deck.FillDeck(HAD_GameManager.Instance.CurrentDeck);
@@ -30,13 +33,22 @@ public class HAD_Player : MonoBehaviour
     {
         if (hand.IsFull) return;
 
-        hand.AddCard(deck.DrawCard());
+        HAD_Card _cardToHad = deck.DrawCard();
+
+        _cardToHad.Owner = this;
+
+        hand.AddCard(_cardToHad);
     }
 
     void SetPosHandCard()
     {
         for (int i = 0; i < hand.CardQuantity; i++)
-            hand.Cards[i].SetPositon(new Vector3(transform.position.x + i + distHandCard, (i + 1) * cardStackHeight, 0) + transform.position);
+        {
+            Vector3 _anchor = new Vector3(transform.position.x + i + distHandCard, (i + 1) * cardStackHeight, cardShift);
+            hand.Cards[i].Anchor = _anchor;
+            hand.Cards[i].SetPositon(_anchor);
+        }
+            
     }
 
     private void OnGUI()
@@ -51,17 +63,18 @@ public class HAD_Player : MonoBehaviour
             GUILayout.Label($"Hand is full !");
         else if (hand.IsEmpty)
             GUILayout.Label($"Hand is Empty.");
-        else
+
+        if (!hand.IsFull)
         {
             if (GUILayout.Button("DrawCard"))
                 DrawCard();
         }
 
-        if (GUILayout.Button("O/C Inventory"))
-        {
-            Debug.Log("O/C Inventory");
+        //if (GUILayout.Button("O/C Inventory"))
+        //{
+        //    Debug.Log("O/C Inventory");
 
-        }
+        //}
 
         GUILayout.EndArea();
 

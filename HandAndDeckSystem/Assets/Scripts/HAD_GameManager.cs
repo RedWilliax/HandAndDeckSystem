@@ -2,12 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HAD_GameManager : MonoBehaviour
+public class HAD_GameManager : HAD_Singleton<HAD_GameManager>
 {
-    static HAD_GameManager instance = null;
-
-    public static HAD_GameManager Instance => instance;
-
+    [SerializeField, Range(2, 15)] float firstPlanHeight;
     [SerializeField, Range(1, 100)] int maxCardHand = 10;
     [SerializeField, Range(1, 100)] int maxCardDeck = 30;
 
@@ -17,14 +14,13 @@ public class HAD_GameManager : MonoBehaviour
     HAD_Deck currentDeck = null;
     public int MaxCardHand => maxCardHand;
     public int MaxCardDeck => maxCardDeck;
+    public float FirstPlanHeight => firstPlanHeight;
 
     public HAD_Deck CurrentDeck => currentDeck;
 
     private void Awake()
     {
-        if (!instance) instance = this;
-
-
+        base.Awake();
 
         if (makePreMadeDeck)
             MakerPreMadeDeck();

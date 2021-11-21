@@ -7,6 +7,8 @@ using System;
 public class HAD_Card : MonoBehaviour, HAD_IActionCard, HAD_ICostCard, HAD_ILifeCard, HAD_IAttackCard
 {
     public static event Action OnDieCard = null;
+    public HAD_Player Owner { get; set; }
+    public Vector3 Anchor { get; set; }
 
     new string name = "DefaultCard";
 
@@ -20,10 +22,10 @@ public class HAD_Card : MonoBehaviour, HAD_IActionCard, HAD_ICostCard, HAD_ILife
 
     public string Name => name;
 
-    public int Cost 
-    { 
-        get => cost; 
-        set => cost = value <= 0 ? 0 : value; 
+    public int Cost
+    {
+        get => cost;
+        set => cost = value <= 0 ? 0 : value;
     }
     public int Life
     {
@@ -34,11 +36,11 @@ public class HAD_Card : MonoBehaviour, HAD_IActionCard, HAD_ICostCard, HAD_ILife
             if (life <= 0) OnDieCard?.Invoke();
         }
     }
-    public int Attack 
-    { 
-        get => attack; 
+    public int Attack
+    {
+        get => attack;
 
-        set => attack = value <= 0 ? 0 : value; 
+        set => attack = value <= 0 ? 0 : value;
     }
 
     public bool IsValid => sprite;
@@ -48,6 +50,11 @@ public class HAD_Card : MonoBehaviour, HAD_IActionCard, HAD_ICostCard, HAD_ILife
         if (!sprite) sprite = GetComponentInChildren<SpriteRenderer>();
 
         if (!IsValid) throw new Exception("Error object in valid !");
+    }
+
+    private void Update()
+    {
+
     }
 
     public void AddLife(int _value)
@@ -81,4 +88,18 @@ public class HAD_Card : MonoBehaviour, HAD_IActionCard, HAD_ICostCard, HAD_ILife
         transform.rotation = _lookAt;
     }
 
+    public bool AboveABoard(out HAD_Board _board)
+    {
+        _board = null;
+
+        if (Physics.Raycast(transform.position, -Vector3.up, out RaycastHit _infoRaycast, 10))
+        {
+            if (!_infoRaycast.collider) return false;
+
+            _board = _infoRaycast.collider.GetComponent<HAD_Board>();
+
+            return _board;
+        }
+        return false;
+    }
 }

@@ -7,7 +7,7 @@ public class HAD_Container
 
     protected List<HAD_Card> cards = new List<HAD_Card>();
 
-    [SerializeField, Range(1, 1000)]protected int maxCards = 10;
+    [SerializeField, Range(1, 1000)]protected int maxCards;
 
     public HAD_Container(int maxCards)
     {
