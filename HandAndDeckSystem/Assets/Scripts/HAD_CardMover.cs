@@ -16,6 +16,7 @@ public class HAD_CardMover : MonoBehaviour
     private void Awake()
     {
         HAD_InputManager.OnLMBClick += GrabCard;
+        HAD_InputManager.OnLMBClick += LayingCard;
         HAD_InputManager.OnRMBClick += UnGrabCard;
 
         mover = gameObject?.GetComponent<HAD_Player>();
@@ -35,6 +36,7 @@ public class HAD_CardMover : MonoBehaviour
     private void OnDestroy()
     {
         HAD_InputManager.OnLMBClick -= GrabCard;
+        HAD_InputManager.OnLMBClick -= LayingCard;
         HAD_InputManager.OnRMBClick -= UnGrabCard;
     }
 
@@ -70,7 +72,10 @@ public class HAD_CardMover : MonoBehaviour
 
         if(currentCard.AboveABoard(out HAD_Board _board))
         {
+            if (_board.IsFull) return;
+
             _board.AddCard(currentCard);
+            currentCard = null;
         }
     }
 

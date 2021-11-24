@@ -52,11 +52,6 @@ public class HAD_Card : MonoBehaviour, HAD_IActionCard, HAD_ICostCard, HAD_ILife
         if (!IsValid) throw new Exception("Error object in valid !");
     }
 
-    private void Update()
-    {
-
-    }
-
     public void AddLife(int _value)
     {
         SetLife(life + _value);

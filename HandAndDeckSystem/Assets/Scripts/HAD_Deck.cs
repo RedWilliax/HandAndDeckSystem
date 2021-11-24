@@ -16,7 +16,7 @@ public class HAD_Deck : HAD_Container
         _deck.cards.ForEach(n => AddCard(n));
     }
 
-    public void Filldeck(List<HAD_Card> _cards)
+    public void FillDeck(List<HAD_Card> _cards)
     {
         _cards.ForEach(n => AddCard(n));
     }
