@@ -2,3 +2,9 @@
 
 # S101: Types should be named in PascalCase
 dotnet_diagnostic.S101.severity = silent
+
+# S3903: Types should be defined in named namespaces
+dotnet_diagnostic.S3903.severity = silent
+
+# S112: General exceptions should never be thrown
+dotnet_diagnostic.S112.severity = suggestion

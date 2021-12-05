@@ -11,8 +11,6 @@ public class HAD_Card : MonoBehaviour, HAD_ICard
 
     int cost = 0;
 
-    SpriteRenderer sprite = null;
-
     public int Cost
     {
         get => cost;
@@ -22,11 +20,13 @@ public class HAD_Card : MonoBehaviour, HAD_ICard
 
     public string Name { get; set; } = "DefaultCard";
 
-    public bool IsValid => sprite;
+    public SpriteRenderer Sprite { get; set; }
+
+    public bool IsValid => Sprite;
 
     private void Start()
     {
-        if (!sprite) sprite = GetComponentInChildren<SpriteRenderer>();
+        if (!Sprite) Sprite = GetComponentInChildren<SpriteRenderer>();
 
         if (!IsValid) throw new Exception("Error object in valid !");
     }
