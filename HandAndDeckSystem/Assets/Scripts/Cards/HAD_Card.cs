@@ -3,33 +3,36 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-//Rename class
-public class HAD_Card : MonoBehaviour, HAD_ICard
+public enum ECardStat
 {
+    NONE,
+    Atck,
+    Def,
+    Cost,
+    Exp
+
+}
+
+public struct StatCard
+{
+    ECardStat stat;
+
+    float data;
+
+    public float Data { get => data; set => data = value; }
+    public ECardStat Stat { get => stat; set => stat = value; }
+}
+
+//Rename class
+public class HAD_Card : MonoBehaviour
+{
+    List<StatCard> allStats = new List<StatCard>();
+
+    public string Name { get; set; } = "Default_Name";
+    public ERarity Rarity { get; set; } = ERarity.COMMON;
     public HAD_Player Owner { get; set; }
     public Vector3 Anchor { get; set; }
-
-    int cost = 0;
-
-    public int Cost
-    {
-        get => cost;
-        set => cost = value <= 0 ? 0 : value;
-    }
-    public ERarity Rarity { get; set; }
-
-    public string Name { get; set; } = "DefaultCard";
-
-    public SpriteRenderer Sprite { get; set; }
-
-    public bool IsValid => Sprite;
-
-    private void Start()
-    {
-        if (!Sprite) Sprite = GetComponentInChildren<SpriteRenderer>();
-
-        if (!IsValid) throw new Exception("Error object in valid !");
-    }
+ 
     public virtual void ActionCard() { }
 
     public void SetPositon(Vector3 _newPos)
@@ -54,10 +57,16 @@ public class HAD_Card : MonoBehaviour, HAD_ICard
         {
             if (!_infoRaycast.collider) return false;
 
-            _board = _infoRaycast.collider.GetComponent<HAD_Board>();
+            HAD_Board _currentboard = _infoRaycast.collider.GetComponent<HAD_Board>();
 
-            return _board;
+            if (_currentboard)
+                _board = _currentboard;
+            else
+                return false;
         }
-        return false;
+        else
+            return false;
+
+        return true;
     }
 }

@@ -74,6 +74,8 @@ public class HAD_CardMover : MonoBehaviour
         {
             if (_board.IsFull) return;
 
+            //ajout de la possibilité de posé sur le board adverse 
+
             _board.AddCard(currentCard);
             currentCard = null;
         }

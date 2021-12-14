@@ -10,12 +10,17 @@ public class HAD_Board : MonoBehaviour
     public event Action OnBoardFull = null;
 
     [SerializeField]
-    int maxCardOnBoard;
+    HAD_Player owner;
+
+    [SerializeField]
+    int maxCardOnBoard = 0;
 
     [SerializeField, Range(0, 10)]
-    float spacingCard;
+    float spacingCard = 0;
 
     HAD_Container boardCountainer;
+
+    public HAD_Player Owner { get => owner; private set => owner = value; }
 
     public bool IsFull
     {
@@ -29,6 +34,9 @@ public class HAD_Board : MonoBehaviour
 
     private void Awake()
     {
+        if (owner)
+            Debug.Log("Missing Owner !");
+
         OnLay += SetPosAllCard;
 
         boardCountainer = new HAD_Container(maxCardOnBoard);
