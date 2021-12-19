@@ -4,6 +4,14 @@ using UnityEngine;
 using System;
 using System.Linq;
 
+public enum ECardType
+{
+    NONE,
+    Unite,
+    Spell,
+    Stuff
+}
+
 public enum ECardStat
 {
     NONE,
@@ -18,29 +26,40 @@ public enum ECardStat
 [Serializable]
 public struct StatCard
 {
-    ECardStat stat;
+    [SerializeField] ECardStat stat;
 
-    float data;
+    [SerializeField] float data;
 
     public float Data { get => data; set => data = value; }
     public ECardStat Stat { get => stat; set => stat = value; }
 }
 
 [Serializable]
+public struct ListStatCard
+{
+    [SerializeField] public List<StatCard> statCards;
+
+    public ListStatCard(List<StatCard> statCards)
+    {
+        this.statCards = statCards;
+    }
+}
+
+[Serializable]
 public struct DataCard
 {
-    string name;
+    [SerializeField] string name;
 
-    string nameSprite;
+    [SerializeField] string nameSprite;
 
-    ERarity rarity;
+    [SerializeField] ERarity rarity;
 
-    List<StatCard> statCards;
+    [SerializeField] ListStatCard listStats;
 
     public string Name { get => name; set => name = value; }
     public string NameSprite { get => nameSprite; set => nameSprite = value; }
     public ERarity Rarity { get => rarity; set => rarity = value; }
-    public List<StatCard> StatCards { get => statCards; set => statCards = value; }
+    public ListStatCard ListStats { get => listStats; set => listStats = value; }
 
     #region ManageStat
 
@@ -59,14 +78,14 @@ public struct DataCard
         if (_add ? ExistStat(_stat) : !ExistStat(_stat)) return;
 
         if (_add)
-            statCards.Add(_stat);
+            ListStats.statCards.Add(_stat);
         else
-            statCards.Remove(_stat);
+            ListStats.statCards.Remove(_stat);
     }
 
     private bool ExistStat(StatCard stat)
     {
-        return statCards.Any(n => n.Stat == stat.Stat) || stat.Stat == ECardStat.NONE;
+        return ListStats.statCards.Any(n => n.Stat == stat.Stat) || stat.Stat == ECardStat.NONE;
     }
 
     #endregion

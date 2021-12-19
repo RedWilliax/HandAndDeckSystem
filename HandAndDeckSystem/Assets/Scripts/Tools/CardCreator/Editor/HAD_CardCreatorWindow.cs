@@ -2,14 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using System.IO;
+using System;
+using JsonCom;
 
 public class HAD_CardCreatorWindow : EditorWindow
 {
     static DataCard dataCard;
     static StatCard newStat;
+    static ListCardData allCards;
 
     Vector2 scrollStats;
-
+    bool canCreate = true;
 
     [MenuItem("Tools/Card/CardCreator")]
     static void Init()
@@ -18,17 +22,23 @@ public class HAD_CardCreatorWindow : EditorWindow
 
         window.Show();
 
+        ResetTool();
+
+    }
+
+    static void ResetTool()
+    {
+        allCards = HAD_PathHelper.GetCardsDataBase();
+
         dataCard = new DataCard();
 
-        dataCard.StatCards = new List<StatCard>();
+        dataCard.ListStats = new ListStatCard(new List<StatCard>());
 
         newStat = new StatCard();
-
     }
 
     private void OnGUI()
     {
-
         SetName();
 
         EditorGUILayout.Space();
@@ -51,7 +61,7 @@ public class HAD_CardCreatorWindow : EditorWindow
 
         if (GUILayout.Button("Create Card"))
         {
-            //CreateCard(cardtoCreate);
+            CreateCard();
         }
     }
 
@@ -60,6 +70,18 @@ public class HAD_CardCreatorWindow : EditorWindow
     void SetName()
     {
         dataCard.Name = EditorGUILayout.TextField("Card's Name :", dataCard.Name);
+
+        foreach (DataCard item in allCards.dataCards)
+        {
+            if (item.Name == dataCard.Name)
+            {
+                EditorGUILayout.HelpBox("This Name's card already exist !", MessageType.Error);
+                canCreate = false;
+                return;
+            }
+        }
+        canCreate = true;
+
     }
 
     void SetRarity()
@@ -70,9 +92,9 @@ public class HAD_CardCreatorWindow : EditorWindow
 
     void StatsManager()
     {
-        for (int i = 0; i < dataCard.StatCards.Count; i++)
+        for (int i = 0; i < dataCard.ListStats.statCards.Count; i++)
         {
-            StatCard _currentStat = dataCard.StatCards[i];
+            StatCard _currentStat = dataCard.ListStats.statCards[i];
 
             EditorGUILayout.BeginHorizontal();
 
@@ -84,7 +106,7 @@ public class HAD_CardCreatorWindow : EditorWindow
 
             EditorGUILayout.EndVertical();
 
-            dataCard.StatCards[i] = _currentStat;
+            dataCard.ListStats.statCards[i] = _currentStat;
 
             if (GUILayout.Button(" X "))
                 dataCard.RemoveStat(_currentStat);
@@ -107,18 +129,21 @@ public class HAD_CardCreatorWindow : EditorWindow
 
     #endregion
 
-
-    void CreateCard(HAD_Card _cardToCreate)
+    void CreateCard()
     {
+        if (!canCreate) return;
+
         Debug.Log("CreateCard");
 
-        if (_cardToCreate)
-        {
-            Debug.LogError("Card to create is null");
-            return;
-        }
+        allCards.dataCards.Add(dataCard);
 
+        JsonUnitility.WriteOnJson(HAD_PathHelper.PathToCardsDataBase, HAD_PathHelper.PathToDatabase, allCards);
+
+        AssetDatabase.Refresh();
+
+        ResetTool();
     }
+
 
 
 }
