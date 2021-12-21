@@ -35,10 +35,16 @@ public class HAD_CardMover : MonoBehaviour
 
     private void OnDestroy()
     {
+        UnsubscribeCard();
+    }
+
+    void UnsubscribeCard()
+    {
         HAD_InputManager.OnLMBClick -= GrabCard;
         HAD_InputManager.OnLMBClick -= LayingCard;
         HAD_InputManager.OnRMBClick -= UnGrabCard;
     }
+
 
     void GrabCard(bool _hold)
     {
@@ -52,7 +58,7 @@ public class HAD_CardMover : MonoBehaviour
             mover.Hand.RemoveCard(currentCard);
         }
 
-        if (currentCard && currentCard.Owner != mover)
+        if (currentCard && (currentCard.Owner != mover || currentCard.ItsBoard))
             currentCard = null;
     }
 
@@ -70,14 +76,17 @@ public class HAD_CardMover : MonoBehaviour
     {
         if (!_hold || !currentCard) return;
 
-        if(currentCard.AboveABoard(out HAD_Board _board))
+        if (currentCard.AboveABoard(out HAD_Board _board))
         {
             if (_board.IsFull) return;
 
             //ajout de la possibilité de posé sur le board adverse 
 
             _board.AddCard(currentCard);
+
             currentCard = null;
+
+
         }
     }
 

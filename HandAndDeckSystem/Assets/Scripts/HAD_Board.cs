@@ -20,6 +20,8 @@ public class HAD_Board : MonoBehaviour
 
     HAD_Container boardCountainer;
 
+    HAD_Card selectedCard = null;
+
     public HAD_Player Owner { get => owner; private set => owner = value; }
 
     public bool IsFull
@@ -34,10 +36,13 @@ public class HAD_Board : MonoBehaviour
 
     private void Awake()
     {
-        if (owner)
+        if (!owner)
             Debug.Log("Missing Owner !");
 
         OnLay += SetPosAllCard;
+        HAD_InputManager.OnLMBClick += SelectCard;
+        HAD_InputManager.OnRMBClick += ResetSelectedCard;
+
 
         boardCountainer = new HAD_Container(maxCardOnBoard);
 
@@ -46,6 +51,8 @@ public class HAD_Board : MonoBehaviour
     public void AddCard(HAD_Card _card)
     {
         boardCountainer.AddCard(_card);
+
+        _card.ItsBoard = this;
 
         OnLay.Invoke();
 
@@ -64,12 +71,46 @@ public class HAD_Board : MonoBehaviour
         }
     }
 
-    private void OnDrawGizmos()
+    void SelectCard(bool _click)
+    {
+        if (!_click || selectedCard) return;
+
+        if (Physics.Raycast(HAD_MousePointer.Instance.InfoImpact.point, -Vector3.up, out RaycastHit raycastHit, 10))
+        {
+            HAD_Card _ob = raycastHit.collider.gameObject.GetComponent<HAD_Card>();
+
+            if (!_ob || !_ob.ItsBoard) return;
+
+            selectedCard = _ob;
+        }
+    }
+
+    void ResetSelectedCard(bool _click)
     {
 
+        if (!_click || !selectedCard) return;
+
+        selectedCard = null;
+
+    }
+
+
+    private void OnDrawGizmos()
+    {
         Gizmos.color = new Color(1, 0, 0, 0.2f);
 
         Gizmos.DrawCube(transform.position, GetComponent<BoxCollider>().bounds.size);
+
+        Gizmos.color = new Color(0, 1, 0, 0.5f);
+
+        if (boardCountainer != null)
+            foreach (HAD_Card item in boardCountainer.Cards)
+                Gizmos.DrawCube(item.Anchor, item.GetComponent<BoxCollider>().bounds.size);
+
+        Gizmos.color = new Color(1, 0, 1, 0.5f);
+
+        if (selectedCard)
+            Gizmos.DrawCube(selectedCard.Anchor, selectedCard.GetComponent<BoxCollider>().bounds.size);
 
     }
 

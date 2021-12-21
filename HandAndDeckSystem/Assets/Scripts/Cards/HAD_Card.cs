@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using System.Linq;
+using TMPro;
 
 public enum ECardType
 {
@@ -52,12 +53,15 @@ public struct DataCard
 
     [SerializeField] string nameSprite;
 
+    [SerializeField] ECardType cardType;
+
     [SerializeField] ERarity rarity;
 
     [SerializeField] ListStatCard listStats;
 
     public string Name { get => name; set => name = value; }
     public string NameSprite { get => nameSprite; set => nameSprite = value; }
+    public ECardType CardType { get => cardType; set => cardType = value; }
     public ERarity Rarity { get => rarity; set => rarity = value; }
     public ListStatCard ListStats { get => listStats; set => listStats = value; }
 
@@ -99,6 +103,24 @@ public class HAD_Card : MonoBehaviour
 
     public HAD_Player Owner { get; set; }
     public Vector3 Anchor { get; set; }
+    public HAD_Board ItsBoard { get; set; }
+
+    #region UIManager
+
+    TextMeshPro cost;
+    TextMeshPro life;
+    TextMeshPro atck;
+    TextMeshPro def;
+    new TextMeshPro name;
+
+    #endregion
+
+    private void Awake()
+    {
+
+
+
+    }
 
     public virtual void ActionCard() { }
 
@@ -118,7 +140,7 @@ public class HAD_Card : MonoBehaviour
 
     public bool AboveABoard(out HAD_Board _board)
     {
-        _board = null;
+        _board = ItsBoard;
 
         if (Physics.Raycast(transform.position, -Vector3.up, out RaycastHit _infoRaycast, 10))
         {
@@ -128,6 +150,7 @@ public class HAD_Card : MonoBehaviour
 
             if (_currentboard)
                 _board = _currentboard;
+
             else
                 return false;
         }

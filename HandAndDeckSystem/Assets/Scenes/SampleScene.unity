@@ -1568,7 +1568,7 @@ GameObject:
   - component: {fileID: 1800740566}
   - component: {fileID: 1800740565}
   - component: {fileID: 1800740564}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: PlayerBoard
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1864,7 +1864,7 @@ GameObject:
   - component: {fileID: 2087660563}
   - component: {fileID: 2087660562}
   - component: {fileID: 2087660561}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: EnnemyBoard
   m_TagString: Untagged
   m_Icon: {fileID: 0}

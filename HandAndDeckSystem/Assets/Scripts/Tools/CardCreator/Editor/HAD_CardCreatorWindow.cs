@@ -13,7 +13,8 @@ public class HAD_CardCreatorWindow : EditorWindow
     static ListCardData allCards;
 
     Vector2 scrollStats;
-    bool canCreate = true;
+    Sprite sprite = null;
+    bool canCreate = false;
 
     [MenuItem("Tools/Card/CardCreator")]
     static void Init()
@@ -40,6 +41,13 @@ public class HAD_CardCreatorWindow : EditorWindow
     private void OnGUI()
     {
         SetName();
+
+        EditorGUILayout.Space();
+
+        SetSprite();
+
+        EditorGUILayout.Space();
+        SetTypeCard();
 
         EditorGUILayout.Space();
 
@@ -84,9 +92,25 @@ public class HAD_CardCreatorWindow : EditorWindow
 
     }
 
+    void SetSprite()
+    {
+        sprite = (Sprite)EditorGUILayout.ObjectField(sprite, typeof(Sprite), false);
+
+        if (sprite)
+            dataCard.NameSprite = sprite.name;
+        
+    }
+
+
+    void SetTypeCard()
+    {
+        dataCard.CardType = (ECardType)EditorGUILayout.EnumPopup("Card's Type : ", dataCard.CardType);
+
+    }
+
     void SetRarity()
     {
-        dataCard.Rarity = (ERarity)EditorGUILayout.EnumPopup("Rarity's Card : ", dataCard.Rarity);
+        dataCard.Rarity = (ERarity)EditorGUILayout.EnumPopup("Card's Rarity : ", dataCard.Rarity);
     }
 
 
@@ -100,9 +124,9 @@ public class HAD_CardCreatorWindow : EditorWindow
 
             EditorGUILayout.BeginVertical();
 
-            _currentStat.Stat = (ECardStat)EditorGUILayout.EnumPopup("Type's Stat : ", _currentStat.Stat);
+            _currentStat.Stat = (ECardStat)EditorGUILayout.EnumPopup("Stat's Type : ", _currentStat.Stat);
 
-            _currentStat.Data = EditorGUILayout.FloatField("Data's Sata : ", _currentStat.Data);
+            _currentStat.Data = EditorGUILayout.FloatField("Stat's Data : ", _currentStat.Data);
 
             EditorGUILayout.EndVertical();
 
@@ -119,9 +143,9 @@ public class HAD_CardCreatorWindow : EditorWindow
 
     void AddStat()
     {
-        newStat.Stat = (ECardStat)EditorGUILayout.EnumPopup("Type's Stat : ", newStat.Stat);
+        newStat.Stat = (ECardStat)EditorGUILayout.EnumPopup("Stat's Type : ", newStat.Stat);
 
-        newStat.Data = EditorGUILayout.FloatField("Data's Sata : ", newStat.Data);
+        newStat.Data = EditorGUILayout.FloatField("Stat's Data : ", newStat.Data);
 
         if (GUILayout.Button(" Add Stat "))
             dataCard.AddStat(newStat);

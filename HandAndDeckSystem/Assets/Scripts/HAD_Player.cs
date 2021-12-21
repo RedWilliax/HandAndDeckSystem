@@ -4,15 +4,6 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 
-
-public struct StatsPlayer
-{
-
-
-
-
-}
-
 public class HAD_Player : MonoBehaviour
 {
     [SerializeField, Range(-10, 10)] float distHandCard = 0;
