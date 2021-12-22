@@ -85,8 +85,6 @@ public class HAD_CardMover : MonoBehaviour
             _board.AddCard(currentCard);
 
             currentCard = null;
-
-
         }
     }
 

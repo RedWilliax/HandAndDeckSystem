@@ -40,22 +40,27 @@ public class HAD_Board : MonoBehaviour
             Debug.Log("Missing Owner !");
 
         OnLay += SetPosAllCard;
+        HAD_InputManager.OnLMBUnClick += AssigneBoardOnCard;
         HAD_InputManager.OnLMBClick += SelectCard;
         HAD_InputManager.OnRMBClick += ResetSelectedCard;
 
-
         boardCountainer = new HAD_Container(maxCardOnBoard);
 
+    }
+
+    private void OnDestroy()
+    {
+        OnLay -= SetPosAllCard;
+        HAD_InputManager.OnLMBUnClick -= AssigneBoardOnCard;
+        HAD_InputManager.OnLMBClick -= SelectCard;
+        HAD_InputManager.OnRMBClick -= ResetSelectedCard;
     }
 
     public void AddCard(HAD_Card _card)
     {
         boardCountainer.AddCard(_card);
 
-        _card.ItsBoard = this;
-
         OnLay.Invoke();
-
     }
 
     void SetPosAllCard()
@@ -71,6 +76,19 @@ public class HAD_Board : MonoBehaviour
         }
     }
 
+    void AssigneBoardOnCard(bool _unHold)
+    {
+        if (!_unHold) return;
+
+        for (int i = 0; i < boardCountainer.CardQuantity; i++)
+        {
+            if (boardCountainer.Cards[i].ItsBoard) continue;
+
+            boardCountainer.Cards[i].ItsBoard = this;
+        }
+    }
+
+
     void SelectCard(bool _click)
     {
         if (!_click || selectedCard) return;
@@ -79,10 +97,11 @@ public class HAD_Board : MonoBehaviour
         {
             HAD_Card _ob = raycastHit.collider.gameObject.GetComponent<HAD_Card>();
 
-            if (!_ob || !_ob.ItsBoard) return;
+            if (!_ob || _ob.ItsBoard != this) return;
 
             selectedCard = _ob;
         }
+
     }
 
     void ResetSelectedCard(bool _click)
@@ -109,8 +128,11 @@ public class HAD_Board : MonoBehaviour
 
         Gizmos.color = new Color(1, 0, 1, 0.5f);
 
-        if (selectedCard)
-            Gizmos.DrawCube(selectedCard.Anchor, selectedCard.GetComponent<BoxCollider>().bounds.size);
+        if (!selectedCard) return;
+
+        Gizmos.DrawCube(selectedCard.Anchor, selectedCard.GetComponent<BoxCollider>().bounds.size);
+
+        Gizmos.DrawLine(selectedCard.Anchor, HAD_MousePointer.Instance.InfoImpact.point);
 
     }
 
