@@ -9,6 +9,8 @@ public class HAD_Container
 
     [SerializeField, Range(1, 1000)]protected int maxCards;
 
+    public int MaxCards => maxCards;
+
     public HAD_Container(int maxCards)
     {
         this.maxCards = maxCards;

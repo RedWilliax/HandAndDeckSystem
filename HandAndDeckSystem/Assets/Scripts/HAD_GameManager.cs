@@ -5,15 +5,16 @@ using UnityEngine;
 public class HAD_GameManager : HAD_Singleton<HAD_GameManager>
 {
     [SerializeField, Range(2, 15)] float firstPlanHeight;
-    [SerializeField, Range(1, 100)] int maxCardHand = 10;
-    [SerializeField, Range(1, 100)] int maxCardDeck = 30;
+
+    [SerializeField] HAD_Player[] allPlayer;
 
     [SerializeField] string pathPreMadeDeck = "Card_Generic";
 
-    public int MaxCardHand => maxCardHand;
-    public int MaxCardDeck => maxCardDeck;
     public float FirstPlanHeight => firstPlanHeight;
 
+    public HAD_Player[] AllPlayer => allPlayer;
+
+    public int PlayerCount => allPlayer.Length;
 
     private void Awake()
     {

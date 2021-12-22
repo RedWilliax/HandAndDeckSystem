@@ -71,9 +71,9 @@ public class HAD_Player : MonoBehaviour
 
         GUILayout.BeginArea(new Rect(_position.x - 50, _position.y - 50, 100, 200));
 
-        GUILayout.Label($"Deck : {deck.CardQuantity} / {HAD_GameManager.Instance.MaxCardDeck}");
+        GUILayout.Label($"Deck : {deck.CardQuantity} / {deck.MaxCards}");
 
-        GUILayout.Label($"Hand : {hand.CardQuantity} / {HAD_GameManager.Instance.MaxCardHand}");
+        GUILayout.Label($"Hand : {hand.CardQuantity} / {hand.MaxCards}");
 
         if (hand.IsFull)
             GUILayout.Label($"Hand is full !");

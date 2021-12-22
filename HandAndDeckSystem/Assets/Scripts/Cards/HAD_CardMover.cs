@@ -53,13 +53,15 @@ public class HAD_CardMover : MonoBehaviour
         if (!_hold) return;
 
         if (!currentCard)
-        {
             currentCard = HAD_MousePointer.Instance.InfoImpact.collider.GetComponent<HAD_Card>();
-            mover.Hand.RemoveCard(currentCard);
+            
+        if (currentCard && (currentCard.Owner != mover || currentCard.ItsBoard))
+        {
+            currentCard = null;
+            return;
         }
 
-        if (currentCard && (currentCard.Owner != mover || currentCard.ItsBoard))
-            currentCard = null;
+        mover.Hand.RemoveCard(currentCard);
     }
 
     void UnGrabCard(bool _hold)

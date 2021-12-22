@@ -113,6 +113,25 @@ public class HAD_Board : MonoBehaviour
 
     }
 
+    private void OnGUI()
+    {
+        Vector3 _positionWorld = transform.forward * 3.5f;
+
+        Vector3 _position = Camera.main.WorldToScreenPoint(_positionWorld);
+
+        GUILayout.BeginArea(new Rect(_position.x - 50, _position.y - 25, 100, 200));
+
+        GUILayout.Label($"Board : {boardCountainer.CardQuantity} / {boardCountainer.MaxCards}");
+
+        if (boardCountainer.IsFull)
+            GUILayout.Label($"Board is full !");
+        else if (boardCountainer.IsEmpty)
+            GUILayout.Label($"Board is Empty.");
+
+        GUILayout.EndArea();
+
+    }
+
 
     private void OnDrawGizmos()
     {
