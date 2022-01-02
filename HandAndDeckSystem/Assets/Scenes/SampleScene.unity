@@ -1464,8 +1464,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   firstPlanHeight: 3
-  allPlayer: []
+  allPlayer:
+  - {fileID: 1764868693}
+  - {fileID: 588854982}
   pathPreMadeDeck: Card_Generic
+  positionEndButton: {x: 8, y: 0, z: 0}
 --- !u!4 &1750252373
 Transform:
   m_ObjectHideFlags: 0

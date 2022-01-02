@@ -32,7 +32,7 @@ public class HAD_MousePointer : HAD_Singleton<HAD_MousePointer>
     {
         Gizmos.color = Color.yellow;
 
-        Gizmos.DrawSphere(infoImpact.point, 0.5f);
+        Gizmos.DrawSphere(infoImpact.point, 0.125f);
 
     }
 

@@ -103,7 +103,7 @@ public class HAD_Card : MonoBehaviour
 
     public HAD_Player Owner { get; set; }
     public Vector3 Anchor { get; set; }
-    public HAD_Board ItsBoard { get; set; }
+    public HAD_Board ItsBoard { get; set; } = null;
 
     #region UIManager
 

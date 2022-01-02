@@ -48,13 +48,13 @@ public class HAD_CardMover : MonoBehaviour
 
     void GrabCard(bool _hold)
     {
-        if (!HAD_MousePointer.Instance.InfoImpact.collider) return;
+        if (!HAD_MousePointer.Instance.InfoImpact.collider || !HAD_GameManager.Instance.IsMineTurn(mover)) return;
 
         if (!_hold) return;
 
         if (!currentCard)
             currentCard = HAD_MousePointer.Instance.InfoImpact.collider.GetComponent<HAD_Card>();
-            
+
         if (currentCard && (currentCard.Owner != mover || currentCard.ItsBoard))
         {
             currentCard = null;
@@ -66,6 +66,8 @@ public class HAD_CardMover : MonoBehaviour
 
     void UnGrabCard(bool _hold)
     {
+        if (!HAD_GameManager.Instance.IsMineTurn(mover)) return;
+
         if (_hold && currentCard)
         {
             mover.Hand.AddCard(currentCard);
@@ -76,7 +78,9 @@ public class HAD_CardMover : MonoBehaviour
 
     void LayingCard(bool _hold)
     {
-        if (!_hold || !currentCard) return;
+
+
+        if (!_hold || !HAD_GameManager.Instance.IsMineTurn(mover) || !currentCard) return;
 
         if (currentCard.AboveABoard(out HAD_Board _board))
         {

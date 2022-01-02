@@ -11,7 +11,6 @@ public class HAD_InputManager : HAD_Singleton<HAD_InputManager>
 
     bool LMBPressed => Input.GetMouseButtonDown(0);
     bool RMBPressed => Input.GetMouseButtonDown(1);
-
     bool LMBUnpressed => Input.GetMouseButtonUp(0);
 
     private void Update()

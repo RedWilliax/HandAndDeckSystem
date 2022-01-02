@@ -91,13 +91,13 @@ public class HAD_Board : MonoBehaviour
 
     void SelectCard(bool _click)
     {
-        if (!_click || selectedCard) return;
+        if (!_click || !HAD_GameManager.Instance.IsMineTurn(Owner) || selectedCard) return;
 
         if (Physics.Raycast(HAD_MousePointer.Instance.InfoImpact.point, -Vector3.up, out RaycastHit raycastHit, 10))
         {
             HAD_Card _ob = raycastHit.collider.gameObject.GetComponent<HAD_Card>();
 
-            if (!_ob || _ob.ItsBoard != this) return;
+            if (!_ob || _ob.Owner != owner || !_ob.ItsBoard) return;
 
             selectedCard = _ob;
         }
@@ -106,7 +106,6 @@ public class HAD_Board : MonoBehaviour
 
     void ResetSelectedCard(bool _click)
     {
-
         if (!_click || !selectedCard) return;
 
         selectedCard = null;
