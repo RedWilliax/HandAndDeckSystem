@@ -11,17 +11,17 @@ public class HAD_CardCreatorWindow : EditorWindow
     static DataCard dataCard;
     static StatCard newStat;
     static ListCardData allCards;
+    static Sprite sprite;
 
     Vector2 scrollStats;
-    Sprite sprite = null;
     bool canCreate = false;
 
     [MenuItem("Tools/Card/CardCreator")]
     static void Init()
     {
-        HAD_CardCreatorWindow window = (HAD_CardCreatorWindow)GetWindow(typeof(HAD_CardCreatorWindow));
+        HAD_CardCreatorWindow _window = (HAD_CardCreatorWindow)GetWindow(typeof(HAD_CardCreatorWindow));
 
-        window.Show();
+        _window.Show();
 
         ResetTool();
 
@@ -36,6 +36,8 @@ public class HAD_CardCreatorWindow : EditorWindow
         dataCard.ListStats = new ListStatCard(new List<StatCard>());
 
         newStat = new StatCard();
+
+        sprite = null;
     }
 
     private void OnGUI()

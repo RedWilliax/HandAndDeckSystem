@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using JsonCom;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -65,6 +66,13 @@ public class HAD_GameManager : HAD_Singleton<HAD_GameManager>
             GameObject _ob = (GameObject)Resources.Load(pathPreMadeDeck);
 
             HAD_Card _card = Instantiate(_ob, _deckPosition, Quaternion.identity).GetComponent<HAD_Card>();
+
+            //Temp
+            ListCardData allCards = new ListCardData();
+            JsonUnitility.ReadJson(ref allCards, HAD_PathHelper.PathToCardsDataBase, HAD_PathHelper.PathToDatabase);
+            _card.DataCard = allCards.dataCards[0];
+            _card.InitializeCard();
+            //
 
             _currentDeck.AddCard(_card);
         }

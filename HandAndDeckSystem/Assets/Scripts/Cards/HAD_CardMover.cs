@@ -78,15 +78,13 @@ public class HAD_CardMover : MonoBehaviour
 
     void LayingCard(bool _hold)
     {
-
-
         if (!_hold || !HAD_GameManager.Instance.IsMineTurn(mover) || !currentCard) return;
 
         if (currentCard.AboveABoard(out HAD_Board _board))
         {
             if (_board.IsFull) return;
 
-            //ajout de la possibilité de posé sur le board adverse 
+            //ajout les fonctionnalité lié au type de carte
 
             _board.AddCard(currentCard);
 

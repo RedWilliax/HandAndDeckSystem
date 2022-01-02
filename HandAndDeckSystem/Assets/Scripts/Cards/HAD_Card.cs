@@ -4,6 +4,7 @@ using UnityEngine;
 using System;
 using System.Linq;
 using TMPro;
+using UnityEngine.UI;
 
 public enum ECardType
 {
@@ -104,22 +105,66 @@ public class HAD_Card : MonoBehaviour
     public HAD_Player Owner { get; set; }
     public Vector3 Anchor { get; set; }
     public HAD_Board ItsBoard { get; set; } = null;
+    public DataCard DataCard { get => dataCard; set => dataCard = value; }
 
     #region UIManager
 
-    TextMeshPro cost;
-    TextMeshPro life;
-    TextMeshPro atck;
-    TextMeshPro def;
-    new TextMeshPro name;
+    [SerializeField] new TMP_Text name;
+    [SerializeField] Image sprite;
+    [SerializeField] TMP_Text cost;
+    [SerializeField] TMP_Text life;
+    [SerializeField] TMP_Text atck;
+    [SerializeField] TMP_Text def;
+    [SerializeField] Image xpBar;
 
     #endregion
 
-    private void Awake()
+    public void InitializeCard()
     {
+        name.text = DataCard.Name;
+
+        sprite.sprite = (Sprite)Resources.Load(DataCard.NameSprite);
 
 
+        //Rework le system d'xp
+        if (GetStat(ECardStat.Exp, out float _value))
+            xpBar.fillAmount = _value;
+        else
+            xpBar.gameObject.SetActive(false);
+        //
 
+
+        SetTextOnType(cost, ECardStat.Cost);
+        SetTextOnType(life, ECardStat.Life);
+        SetTextOnType(atck, ECardStat.Atck);
+        SetTextOnType(def, ECardStat.Def);
+    }
+
+
+    private void SetTextOnType(TMP_Text _text, ECardStat _type)
+    {
+        if (GetStat(_type, out float value))
+            _text.text = $"{value : 0}";
+        else
+            _text.gameObject.SetActive(false);
+    }
+
+    private bool GetStat(ECardStat _stat, out float _value)
+    {
+        _value = -1;
+
+        List<StatCard> allStats = DataCard.ListStats.statCards;
+
+        for (int i = 0; i < allStats.Count; i++)
+        {
+            if (_stat == allStats[i].Stat)
+            {
+                _value = allStats[i].Data;
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public virtual void ActionCard() { }
