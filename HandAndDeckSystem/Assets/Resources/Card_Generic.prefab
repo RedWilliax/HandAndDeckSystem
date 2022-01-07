@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5626073191733181470}
   - component: {fileID: 5193324505206644260}
   - component: {fileID: 1220783502868819052}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Name
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -145,7 +145,7 @@ GameObject:
   - component: {fileID: 2172309409903250220}
   - component: {fileID: 3597496150204492534}
   - component: {fileID: 283183135401784885}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Attack
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -279,7 +279,7 @@ GameObject:
   - component: {fileID: 7805121939459083854}
   - component: {fileID: 7929751686184983187}
   - component: {fileID: 8846157226971156297}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Def
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -413,7 +413,7 @@ GameObject:
   - component: {fileID: 6433082749451363832}
   - component: {fileID: 5624498358787042092}
   - component: {fileID: 8455813310193839121}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Portait
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -488,7 +488,7 @@ GameObject:
   - component: {fileID: 8404942154302549973}
   - component: {fileID: 4378839812393189666}
   - component: {fileID: 7184113734481626699}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Card_Generic
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -554,7 +554,7 @@ GameObject:
   - component: {fileID: 1969072566563068656}
   - component: {fileID: 5525903461664854652}
   - component: {fileID: 4079904591133824165}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Xpbar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -629,7 +629,7 @@ GameObject:
   - component: {fileID: 7846799979301425332}
   - component: {fileID: 910097808259329264}
   - component: {fileID: 4283584134134724281}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Type
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -765,7 +765,7 @@ GameObject:
   - component: {fileID: 1797680224969658193}
   - component: {fileID: 8214712717068113482}
   - component: {fileID: 6152187858421845688}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Background_xpBar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -841,7 +841,7 @@ GameObject:
   - component: {fileID: 1288395478720681874}
   - component: {fileID: 1314834758478998106}
   - component: {fileID: 461058786367173852}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Rarity
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -915,7 +915,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3898398869107107560}
   - component: {fileID: 3088186186882001923}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -998,7 +998,7 @@ GameObject:
   - component: {fileID: 2284967519621761929}
   - component: {fileID: 2231395855313464018}
   - component: {fileID: 871151492577816994}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Life
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1132,7 +1132,7 @@ GameObject:
   - component: {fileID: 1787477887252671247}
   - component: {fileID: 7517587937038823055}
   - component: {fileID: 8177748878642526644}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Cost
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1267,7 +1267,7 @@ GameObject:
   - component: {fileID: 6078910194103214945}
   - component: {fileID: 5721817990506696544}
   - component: {fileID: 2953882551308692498}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}

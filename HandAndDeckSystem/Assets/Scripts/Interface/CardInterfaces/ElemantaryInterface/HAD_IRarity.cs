@@ -7,7 +7,7 @@ public enum ERarity
     COMMON, // 72.5%
     RARE, // 15%
     EPIC, // 5%
-    LENGANDARY, // 2.5%
+    LEGENDARY, // 2.5%
     UNIQUE // 0.1%
 
 }

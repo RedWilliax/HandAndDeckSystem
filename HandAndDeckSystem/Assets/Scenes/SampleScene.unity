@@ -172,6 +172,9 @@ MonoBehaviour:
   maxDeckCard: 30
   maxHandCard: 10
   positionDeck: {x: 8, y: 0.5, z: -3}
+  Layer:
+    serializedVersion: 2
+    m_Bits: 8
   positionDebuger: {x: 8, y: 4}
 --- !u!4 &588854983
 Transform:
@@ -1531,6 +1534,9 @@ MonoBehaviour:
   maxDeckCard: 30
   maxHandCard: 10
   positionDeck: {x: 8, y: 0.5, z: 3}
+  Layer:
+    serializedVersion: 2
+    m_Bits: 8
   positionDebuger: {x: 8, y: -4}
 --- !u!4 &1764868694
 Transform:

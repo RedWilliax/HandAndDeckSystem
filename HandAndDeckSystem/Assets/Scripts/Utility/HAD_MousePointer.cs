@@ -10,6 +10,9 @@ public class HAD_MousePointer : HAD_Singleton<HAD_MousePointer>
 
     public RaycastHit InfoImpact { get => infoImpact; }
 
+    public Vector2 MousePosition2D => new Vector2(infoImpact.point.x, infoImpact.point.z);
+    public Vector3 MousePosition => infoImpact.point;
+
     private void Awake()
     {
         base.Awake();

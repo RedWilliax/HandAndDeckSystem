@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class HAD_Board : MonoBehaviour
@@ -41,8 +42,6 @@ public class HAD_Board : MonoBehaviour
 
         OnLay += SetPosAllCard;
         HAD_InputManager.OnLMBUnClick += AssigneBoardOnCard;
-        HAD_InputManager.OnLMBClick += SelectCard;
-        HAD_InputManager.OnRMBClick += ResetSelectedCard;
 
         boardCountainer = new HAD_Container(maxCardOnBoard);
 
@@ -52,8 +51,6 @@ public class HAD_Board : MonoBehaviour
     {
         OnLay -= SetPosAllCard;
         HAD_InputManager.OnLMBUnClick -= AssigneBoardOnCard;
-        HAD_InputManager.OnLMBClick -= SelectCard;
-        HAD_InputManager.OnRMBClick -= ResetSelectedCard;
     }
 
     public void AddCard(HAD_Card _card)
@@ -88,29 +85,6 @@ public class HAD_Board : MonoBehaviour
         }
     }
 
-
-    void SelectCard(bool _click)
-    {
-        if (!_click || !HAD_GameManager.Instance.IsMineTurn(Owner) || selectedCard) return;
-
-        if (Physics.Raycast(HAD_MousePointer.Instance.InfoImpact.point, -Vector3.up, out RaycastHit raycastHit, 10))
-        {
-            HAD_Card _ob = raycastHit.collider.gameObject.GetComponent<HAD_Card>();
-
-            if (!_ob || _ob.Owner != owner || !_ob.ItsBoard) return;
-
-            selectedCard = _ob;
-        }
-
-    }
-
-    void ResetSelectedCard(bool _click)
-    {
-        if (!_click || !selectedCard) return;
-
-        selectedCard = null;
-
-    }
 
     private void OnGUI()
     {

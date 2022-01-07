@@ -15,6 +15,9 @@ public class HAD_Player : MonoBehaviour
 
     [SerializeField] Vector3 positionDeck = new Vector3(5, 0, 0);
 
+    [Tooltip("This variable it's use when we select a card on a board")]
+    [SerializeField] LayerMask Layer = 0;
+
     #region Debug
 
     [SerializeField] Vector2 positionDebuger;
@@ -27,10 +30,16 @@ public class HAD_Player : MonoBehaviour
 
     HAD_Deck deck = null;
 
+    HAD_Card selectedCard = null;
+
     public HAD_Hand Hand => hand;
 
     private void Start()
     {
+        HAD_InputManager.OnLMBClick += SelectCard;
+        HAD_InputManager.OnRMBClick += UnSelectCard;
+        HAD_GameManager.Instance.SubEndTurn(UnSelectedCard);
+
         hand = new HAD_Hand(maxHandCard);
 
         deck = new HAD_Deck(maxDeckCard);
@@ -40,6 +49,16 @@ public class HAD_Player : MonoBehaviour
 
         if (HAD_GameManager.Instance)
             deck.FillDeck(HAD_GameManager.Instance.MakerPreMadeDeck(maxDeckCard, anchorDeck));
+    }
+
+    private void OnDestroy()
+    {
+        HAD_InputManager.OnLMBClick -= SelectCard;
+        HAD_InputManager.OnRMBClick -= UnSelectCard;
+        if (HAD_GameManager.Instance)
+            HAD_GameManager.Instance.UnSubEndTurn(UnSelectedCard);
+
+
     }
 
     void DrawCard()
@@ -65,6 +84,35 @@ public class HAD_Player : MonoBehaviour
 
     }
 
+    void SelectCard(bool _click)
+    {
+        if (!HAD_GameManager.Instance.IsMineTurn(this) || !_click) return;
+
+        if (Physics.Raycast(HAD_MousePointer.Instance.InfoImpact.point, -Vector3.up, out RaycastHit _raycastInfo, 10, Layer))
+        {
+            HAD_Card _card = _raycastInfo.collider.GetComponent<HAD_Card>();
+
+            if (!_card.ItsBoard || _card.Owner != this) return;
+
+            selectedCard = _card;
+        }
+
+    }
+
+    void UnSelectCard(bool _click)
+    {
+        if (!HAD_GameManager.Instance.IsMineTurn(this) || !_click) return;
+
+        UnSelectedCard();
+    }
+
+    //Création de cette méthode pour les delegates
+    void UnSelectedCard()
+    {
+        selectedCard = null;
+    }
+
+
     private void OnGUI()
     {
         Vector3 _position = Camera.main.WorldToScreenPoint(new Vector3(positionDebuger.x, 0, -positionDebuger.y));
@@ -89,7 +137,6 @@ public class HAD_Player : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-
         Gizmos.color = Color.red;
 
         Gizmos.DrawSphere(transform.position, 0.2f);
@@ -102,6 +149,12 @@ public class HAD_Player : MonoBehaviour
 
         Gizmos.DrawSphere(new Vector3(positionDebuger.x, 0.5f, positionDebuger.y), 0.05f);
 
+        if (!selectedCard) return;
+
+        Gizmos.color = new Color(1, 0, 1, 0.2f);
+
+        Gizmos.DrawCube(selectedCard.transform.position, selectedCard.GetComponent<BoxCollider>().bounds.size);
+        Gizmos.DrawLine(selectedCard.transform.position, HAD_MousePointer.Instance.MousePosition);
 
     }
 

@@ -106,6 +106,7 @@ public class HAD_Card : MonoBehaviour
     public Vector3 Anchor { get; set; }
     public HAD_Board ItsBoard { get; set; } = null;
     public DataCard DataCard { get => dataCard; set => dataCard = value; }
+    public bool SelectedCard { get; set; } = false;
 
     #region UIManager
 
@@ -117,7 +118,6 @@ public class HAD_Card : MonoBehaviour
     [SerializeField] TMP_Text def;
     [SerializeField] Image xpBar;
 
-    #endregion
 
     public void InitializeCard()
     {
@@ -133,18 +133,16 @@ public class HAD_Card : MonoBehaviour
             xpBar.gameObject.SetActive(false);
         //
 
-
         SetTextOnType(cost, ECardStat.Cost);
         SetTextOnType(life, ECardStat.Life);
         SetTextOnType(atck, ECardStat.Atck);
         SetTextOnType(def, ECardStat.Def);
     }
 
-
     private void SetTextOnType(TMP_Text _text, ECardStat _type)
     {
         if (GetStat(_type, out float value))
-            _text.text = $"{value : 0}";
+            _text.text = $"{value: 0}";
         else
             _text.gameObject.SetActive(false);
     }
@@ -166,6 +164,8 @@ public class HAD_Card : MonoBehaviour
 
         return false;
     }
+
+    #endregion
 
     public virtual void ActionCard() { }
 
@@ -204,4 +204,6 @@ public class HAD_Card : MonoBehaviour
 
         return true;
     }
+
+
 }

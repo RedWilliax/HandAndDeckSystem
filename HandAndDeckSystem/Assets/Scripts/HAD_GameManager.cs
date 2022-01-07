@@ -1,10 +1,12 @@
 ﻿using JsonCom;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class HAD_GameManager : HAD_Singleton<HAD_GameManager>
 {
+
     [SerializeField, Range(2, 15)] float firstPlanHeight;
 
     [SerializeField] HAD_Player[] allPlayer;
@@ -29,7 +31,6 @@ public class HAD_GameManager : HAD_Singleton<HAD_GameManager>
         base.Awake();
 
         turnSystem = new HAD_TurnSystem();
-
     }
 
     private void Start()
@@ -49,6 +50,15 @@ public class HAD_GameManager : HAD_Singleton<HAD_GameManager>
     public bool IsMineTurn(HAD_Player _player)
     {
         return CurrentPlayer == _player;
+    }
+
+    public void SubEndTurn(Action _callback)
+    {
+        turnSystem.OnEndTurn += _callback;
+    }
+    public void UnSubEndTurn(Action _callback)
+    {
+        turnSystem.OnEndTurn -= _callback;
     }
 
 
@@ -100,17 +110,17 @@ public class HAD_GameManager : HAD_Singleton<HAD_GameManager>
     {
         Vector3 _position = Camera.main.WorldToScreenPoint(positionEndButton);
 
-        GUILayout.BeginArea(new Rect(_position.x -50, _position.y -50, 100, 200));
+        GUILayout.BeginArea(new Rect(_position.x - 50, _position.y - 50, 100, 200));
 
         GUILayout.Label($"Time : {turnSystem.TimeWaited: 0.0}");
         GUILayout.Label($"Turn : {turnSystem.TurnCount}");
         GUILayout.Label($"Current : {turnSystem.CurrentPlayer.name}");
 
-        if(GUILayout.Button("End Turn"))
+        if (GUILayout.Button("End Turn"))
         {
             turnSystem.EndTurn();
         }
-        
+
         GUILayout.EndArea();
 
     }
