@@ -101,7 +101,6 @@ public struct DataCard
 public class HAD_Card : MonoBehaviour
 {
     DataCard dataCard;
-
     public HAD_Player Owner { get; set; }
     public Vector3 Anchor { get; set; }
     public HAD_Board ItsBoard { get; set; } = null;
@@ -123,8 +122,15 @@ public class HAD_Card : MonoBehaviour
     {
         name.text = DataCard.Name;
 
-        sprite.sprite = (Sprite)Resources.Load(DataCard.NameSprite);
 
+        //Très sensible
+        Sprite[] allSprites = Resources.LoadAll<Sprite>(DataCard.NameSprite.Remove(DataCard.NameSprite.Length - 2));
+
+        sprite.sprite = allSprites.FirstOrDefault(n => n.name == DataCard.NameSprite);
+
+        if (!sprite.sprite)
+            Debug.LogError($"Error on Sprite !{DataCard.NameSprite}");
+        //
 
         //Rework le system d'xp
         if (GetStat(ECardStat.Exp, out float _value))
@@ -163,6 +169,16 @@ public class HAD_Card : MonoBehaviour
         }
 
         return false;
+    }
+
+    private void UpdateUICard()
+    {
+        name.text = DataCard.Name;
+
+        SetTextOnType(cost, ECardStat.Cost);
+        SetTextOnType(life, ECardStat.Life);
+        SetTextOnType(atck, ECardStat.Atck);
+        SetTextOnType(def, ECardStat.Def);
     }
 
     #endregion
@@ -205,5 +221,24 @@ public class HAD_Card : MonoBehaviour
         return true;
     }
 
+    public bool AboveACard(out HAD_Card _card)
+    {
+        _card = null;
+
+        if (Physics.Raycast(transform.position, -Vector3.up, out RaycastHit _infoRaycast, 10, Owner.Layer))
+        {
+            if (!_infoRaycast.collider) return false;
+
+            HAD_Card _currentCard = _infoRaycast.collider.GetComponent<HAD_Card>();
+
+            if (_currentCard)
+                _card = _currentCard;
+
+            else return false;
+        }
+        else return false;
+
+        return true;
+    }
 
 }

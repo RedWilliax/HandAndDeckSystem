@@ -16,7 +16,7 @@ public class HAD_Player : MonoBehaviour
     [SerializeField] Vector3 positionDeck = new Vector3(5, 0, 0);
 
     [Tooltip("This variable it's use when we select a card on a board")]
-    [SerializeField] LayerMask Layer = 0;
+    [SerializeField] LayerMask layer = 0;
 
     #region Debug
 
@@ -30,16 +30,26 @@ public class HAD_Player : MonoBehaviour
 
     HAD_Deck deck = null;
 
+    HAD_Deck discardPile = null;
+
     HAD_Card selectedCard = null;
 
     public HAD_Hand Hand => hand;
 
-    private void Start()
+    public HAD_Deck DiscardPile => discardPile;
+
+    public LayerMask Layer => layer;
+
+    private void Awake()
     {
         HAD_InputManager.OnLMBClick += SelectCard;
         HAD_InputManager.OnRMBClick += UnSelectCard;
         HAD_GameManager.Instance.SubEndTurn(UnSelectedCard);
 
+    }
+
+    private void Start()
+    {
         hand = new HAD_Hand(maxHandCard);
 
         deck = new HAD_Deck(maxDeckCard);
@@ -88,14 +98,24 @@ public class HAD_Player : MonoBehaviour
     {
         if (!HAD_GameManager.Instance.IsMineTurn(this) || !_click) return;
 
-        if (Physics.Raycast(HAD_MousePointer.Instance.InfoImpact.point, -Vector3.up, out RaycastHit _raycastInfo, 10, Layer))
-        {
-            HAD_Card _card = _raycastInfo.collider.GetComponent<HAD_Card>();
+        selectedCard = GetCard();
 
-            if (!_card.ItsBoard || _card.Owner != this) return;
+        if (!selectedCard) return;
 
-            selectedCard = _card;
-        }
+        if (!selectedCard.ItsBoard || selectedCard.Owner != this)
+            selectedCard = null;
+    }
+
+    void SelectTarget(bool _click)
+    {
+        if (!_click || !selectedCard) return;
+
+        HAD_Card _cardTarget = GetCard();
+
+        if (!_cardTarget) return;
+
+
+
 
     }
 
@@ -112,6 +132,24 @@ public class HAD_Player : MonoBehaviour
         selectedCard = null;
     }
 
+    private HAD_Card GetCard()
+    {
+        if (Physics.Raycast(HAD_MousePointer.Instance.InfoImpact.point, -Vector3.up, out RaycastHit _raycastInfo, 10, layer))
+        {
+            HAD_Card _card = _raycastInfo.collider.GetComponent<HAD_Card>();
+
+            return _card;
+        }
+        return null;
+
+    }
+
+    private void ApplyDataOnCard()
+    {
+
+
+
+    }
 
     private void OnGUI()
     {

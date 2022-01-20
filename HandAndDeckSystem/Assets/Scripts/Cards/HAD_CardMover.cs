@@ -19,6 +19,8 @@ public class HAD_CardMover : MonoBehaviour
         HAD_InputManager.OnLMBClick += LayingCard;
         HAD_InputManager.OnRMBClick += UnGrabCard;
 
+        HAD_GameManager.Instance.SubEndTurn(UnGradCard);
+
         mover = gameObject?.GetComponent<HAD_Player>();
 
         if (!mover)
@@ -43,6 +45,7 @@ public class HAD_CardMover : MonoBehaviour
         HAD_InputManager.OnLMBClick -= GrabCard;
         HAD_InputManager.OnLMBClick -= LayingCard;
         HAD_InputManager.OnRMBClick -= UnGrabCard;
+        HAD_GameManager.Instance.UnSubEndTurn(UnGradCard);
     }
 
 
@@ -76,20 +79,63 @@ public class HAD_CardMover : MonoBehaviour
         }
     }
 
+    void UnGradCard()
+    {
+        UnGrabCard(true);
+    }
+
     void LayingCard(bool _hold)
     {
         if (!_hold || !HAD_GameManager.Instance.IsMineTurn(mover) || !currentCard) return;
 
+        switch (currentCard.DataCard.CardType)
+        {
+            case ECardType.NONE:
+                break;
+            case ECardType.Unite:
+                LayingUnite();
+                break;
+            case ECardType.Spell:
+                LayingSpell();
+                break;
+            case ECardType.Stuff:
+                LayingStuff();
+                break;
+        }
+
+    }
+
+    void LayingUnite()
+    {
         if (currentCard.AboveABoard(out HAD_Board _board))
         {
             if (_board.IsFull) return;
-
-            //ajout les fonctionnalité lié au type de carte
 
             _board.AddCard(currentCard);
 
             currentCard = null;
         }
+    }
+
+    void LayingSpell()
+    {
+        if (currentCard.AboveACard(out HAD_Card _card))
+        {
+
+        }
+    }
+
+    void LayingStuff()
+    {
+
+        if (currentCard.AboveACard(out HAD_Card _card))
+        {
+            if (_card.DataCard.CardType != ECardType.Unite) return;
+
+
+
+        }
+
     }
 
 
