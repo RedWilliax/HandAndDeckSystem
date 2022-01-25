@@ -45,13 +45,15 @@ public class HAD_CardMover : MonoBehaviour
         HAD_InputManager.OnLMBClick -= GrabCard;
         HAD_InputManager.OnLMBClick -= LayingCard;
         HAD_InputManager.OnRMBClick -= UnGrabCard;
-        HAD_GameManager.Instance.UnSubEndTurn(UnGradCard);
+
+        if (HAD_GameManager.Instance)
+            HAD_GameManager.Instance.UnSubEndTurn(UnGradCard);
     }
 
 
     void GrabCard(bool _hold)
     {
-        if (!HAD_MousePointer.Instance.InfoImpact.collider || !HAD_GameManager.Instance.IsMineTurn(mover)) return;
+        if (mover.SelectedCard || !HAD_MousePointer.Instance.InfoImpact.collider || !HAD_GameManager.Instance.IsMineTurn(mover)) return;
 
         if (!_hold) return;
 

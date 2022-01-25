@@ -34,6 +34,9 @@ public struct StatCard
 
     public float Data { get => data; set => data = value; }
     public ECardStat Stat { get => stat; set => stat = value; }
+
+    public void SetData(float _value) => data -= _value;
+
 }
 
 [Serializable]
@@ -100,6 +103,8 @@ public struct DataCard
 //Rename class
 public class HAD_Card : MonoBehaviour
 {
+    public event Action OnUpdateCard = null;
+
     DataCard dataCard;
     public HAD_Player Owner { get; set; }
     public Vector3 Anchor { get; set; }
@@ -117,6 +122,11 @@ public class HAD_Card : MonoBehaviour
     [SerializeField] TMP_Text def;
     [SerializeField] Image xpBar;
 
+    private void Awake()
+    {
+        OnUpdateCard += UpdateUICard;
+
+    }
 
     public void InitializeCard()
     {
@@ -182,6 +192,16 @@ public class HAD_Card : MonoBehaviour
     }
 
     #endregion
+
+    public void SetStat(ECardStat _stat, float _value)
+    {
+        for (int i = 0; i < dataCard.ListStats.statCards.Count; i++)
+            if (dataCard.ListStats.statCards[i].Stat == _stat)
+                dataCard.ListStats.statCards[i].SetData(_value);
+
+        OnUpdateCard?.Invoke();
+    }
+
 
     public virtual void ActionCard() { }
 

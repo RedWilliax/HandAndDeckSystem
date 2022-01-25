@@ -35,14 +35,15 @@ public class HAD_Player : MonoBehaviour
     HAD_Card selectedCard = null;
 
     public HAD_Hand Hand => hand;
-
     public HAD_Deck DiscardPile => discardPile;
-
     public LayerMask Layer => layer;
+    public HAD_Card SelectedCard => selectedCard;
+
 
     private void Awake()
     {
         HAD_InputManager.OnLMBClick += SelectCard;
+        HAD_InputManager.OnLMBClick += ApplyDataOnCard;
         HAD_InputManager.OnRMBClick += UnSelectCard;
         HAD_GameManager.Instance.SubEndTurn(UnSelectedCard);
 
@@ -64,6 +65,7 @@ public class HAD_Player : MonoBehaviour
     private void OnDestroy()
     {
         HAD_InputManager.OnLMBClick -= SelectCard;
+        HAD_InputManager.OnLMBClick -= ApplyDataOnCard;
         HAD_InputManager.OnRMBClick -= UnSelectCard;
         if (HAD_GameManager.Instance)
             HAD_GameManager.Instance.UnSubEndTurn(UnSelectedCard);
@@ -96,7 +98,7 @@ public class HAD_Player : MonoBehaviour
 
     void SelectCard(bool _click)
     {
-        if (!HAD_GameManager.Instance.IsMineTurn(this) || !_click) return;
+        if (selectedCard || !HAD_GameManager.Instance.IsMineTurn(this) || !_click) return;
 
         selectedCard = GetCard();
 
@@ -138,14 +140,24 @@ public class HAD_Player : MonoBehaviour
         {
             HAD_Card _card = _raycastInfo.collider.GetComponent<HAD_Card>();
 
+            // Add limitation : warm up des carte, silence, etc
+
             return _card;
         }
         return null;
 
     }
 
-    private void ApplyDataOnCard()
+    private void ApplyDataOnCard(bool _hold)
     {
+        if (!_hold || !selectedCard) return;
+
+        HAD_Card _target = GetCard();
+
+        if (!_target || _target == selectedCard || _target.Owner == this || !_target.ItsBoard || _target.DataCard.CardType != ECardType.Unite) return;
+
+        Debug.Log(_target);
+
 
 
 
