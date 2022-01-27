@@ -35,7 +35,12 @@ public struct StatCard
     public float Data { get => data; set => data = value; }
     public ECardStat Stat { get => stat; set => stat = value; }
 
-    public void SetData(float _value) => data -= _value;
+    public void SetData(float _value)
+    {
+
+        data -= _value;
+        data = data <= 0 ? 0 : data;
+    }
 
 }
 
@@ -104,13 +109,28 @@ public struct DataCard
 public class HAD_Card : MonoBehaviour
 {
     public event Action OnUpdateCard = null;
+    public event Action OnDeathCard = null;
 
     DataCard dataCard;
     public HAD_Player Owner { get; set; }
     public Vector3 Anchor { get; set; }
     public HAD_Board ItsBoard { get; set; } = null;
     public DataCard DataCard { get => dataCard; set => dataCard = value; }
-    public bool SelectedCard { get; set; } = false;
+    public bool Discard { get; set; } = false;
+
+    private void Awake()
+    {
+        OnUpdateCard += UpdateUICard;
+        OnUpdateCard += OnDead;
+    }
+
+    private void OnDestroy()
+    {
+
+        OnUpdateCard -= UpdateUICard;
+        OnUpdateCard -= OnDead;
+
+    }
 
     #region UIManager
 
@@ -122,11 +142,7 @@ public class HAD_Card : MonoBehaviour
     [SerializeField] TMP_Text def;
     [SerializeField] Image xpBar;
 
-    private void Awake()
-    {
-        OnUpdateCard += UpdateUICard;
 
-    }
 
     public void InitializeCard()
     {
@@ -163,7 +179,51 @@ public class HAD_Card : MonoBehaviour
             _text.gameObject.SetActive(false);
     }
 
-    private bool GetStat(ECardStat _stat, out float _value)
+
+    private void UpdateUICard()
+    {
+        name.text = DataCard.Name;
+
+        SetTextOnType(cost, ECardStat.Cost);
+        SetTextOnType(life, ECardStat.Life);
+        SetTextOnType(atck, ECardStat.Atck);
+        SetTextOnType(def, ECardStat.Def);
+    }
+
+    #endregion
+
+    void OnDead()
+    {
+        if (!IsDead() || Discard) return;
+
+        OnDeathCard?.Invoke();
+
+        Owner.DiscardCard(this);
+    }
+
+    bool IsDead()
+    {
+        GetStat(ECardStat.Life, out float _life);
+
+        return _life <= 0;
+    }
+
+    public void SetStat(ECardStat _stat, float _value)
+    {
+        for (int i = 0; i < dataCard.ListStats.statCards.Count; i++)
+            if (dataCard.ListStats.statCards[i].Stat == _stat)
+            {
+                StatCard _currentStat = dataCard.ListStats.statCards[i];
+
+                _currentStat.SetData(_value);
+
+                dataCard.ListStats.statCards[i] = _currentStat;
+            }
+
+        OnUpdateCard?.Invoke();
+    }
+
+    public bool GetStat(ECardStat _stat, out float _value)
     {
         _value = -1;
 
@@ -180,28 +240,6 @@ public class HAD_Card : MonoBehaviour
 
         return false;
     }
-
-    private void UpdateUICard()
-    {
-        name.text = DataCard.Name;
-
-        SetTextOnType(cost, ECardStat.Cost);
-        SetTextOnType(life, ECardStat.Life);
-        SetTextOnType(atck, ECardStat.Atck);
-        SetTextOnType(def, ECardStat.Def);
-    }
-
-    #endregion
-
-    public void SetStat(ECardStat _stat, float _value)
-    {
-        for (int i = 0; i < dataCard.ListStats.statCards.Count; i++)
-            if (dataCard.ListStats.statCards[i].Stat == _stat)
-                dataCard.ListStats.statCards[i].SetData(_value);
-
-        OnUpdateCard?.Invoke();
-    }
-
 
     public virtual void ActionCard() { }
 

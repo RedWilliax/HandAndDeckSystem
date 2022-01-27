@@ -45,7 +45,10 @@ public class HAD_Container
         return CardQuantity > 0;
     }
 
-    
+    public virtual bool ExistCard(HAD_Card _card)
+    {
+        return cards.Contains(_card);
+    }
 
 
     #endregion

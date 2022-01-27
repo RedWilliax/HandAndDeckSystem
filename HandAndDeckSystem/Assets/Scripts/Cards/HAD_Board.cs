@@ -7,6 +7,7 @@ using UnityEngine;
 public class HAD_Board : MonoBehaviour
 {
     public event Action OnLay = null;
+    public event Action OnGrab = null;
 
     public event Action OnBoardFull = null;
 
@@ -20,8 +21,6 @@ public class HAD_Board : MonoBehaviour
     float spacingCard = 0;
 
     HAD_Container boardCountainer;
-
-    HAD_Card selectedCard = null;
 
     public HAD_Player Owner { get => owner; private set => owner = value; }
 
@@ -41,6 +40,7 @@ public class HAD_Board : MonoBehaviour
             Debug.Log("Missing Owner !");
 
         OnLay += SetPosAllCard;
+        OnGrab += SetPosAllCard;
         HAD_InputManager.OnLMBUnClick += AssigneBoardOnCard;
 
         boardCountainer = new HAD_Container(maxCardOnBoard);
@@ -50,6 +50,8 @@ public class HAD_Board : MonoBehaviour
     private void OnDestroy()
     {
         OnLay -= SetPosAllCard;
+        OnGrab -= SetPosAllCard;
+
         HAD_InputManager.OnLMBUnClick -= AssigneBoardOnCard;
     }
 
@@ -60,13 +62,20 @@ public class HAD_Board : MonoBehaviour
         OnLay.Invoke();
     }
 
+    public void RemoveCard(HAD_Card _card)
+    {
+        boardCountainer.RemoveCard(_card);
+
+        OnGrab?.Invoke();
+    }
+
     void SetPosAllCard()
     {
         for (int i = 0; i < boardCountainer.CardQuantity; i++)
         {
-            int _indexPos = ((i % 2) > 0 ? -(i + 1) / 2 : (i + 1) / 2);
+            int _indexPos = i - boardCountainer.CardQuantity;
 
-            Vector3 _anchor = transform.position + (-Vector3.right * (spacingCard * _indexPos) + (Vector3.up * 0.1f));
+            Vector3 _anchor = transform.position + (Vector3.right * (spacingCard * _indexPos) + (Vector3.up * 0.1f)) + new Vector3(boardCountainer.CardQuantity + 1, 0, 0);
 
             boardCountainer.Cards[i].Anchor = _anchor;
             boardCountainer.Cards[i].SetPositon(_anchor);
@@ -108,23 +117,17 @@ public class HAD_Board : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        Gizmos.color = new Color(1, 0, 0, 0.2f);
+        //Gizmos.color = new Color(1, 0, 0, 0.2f);
 
-        Gizmos.DrawCube(transform.position, GetComponent<BoxCollider>().bounds.size);
+        //Gizmos.DrawCube(transform.position, GetComponent<BoxCollider>().bounds.size);
 
-        Gizmos.color = new Color(0, 1, 0, 0.5f);
+        //for (int i = 0; i < boardcountainer.cardquantity; i++)
+        //{
+        //    gizmos.color = color.red;
 
-        if (boardCountainer != null)
-            foreach (HAD_Card item in boardCountainer.Cards)
-                Gizmos.DrawCube(item.Anchor, item.GetComponent<BoxCollider>().bounds.size);
+        //    gizmos.drawsphere(boardcountainer.cards[i].anchor, (i + 0.1f) / 10.0f);
 
-        Gizmos.color = new Color(1, 0, 1, 0.5f);
-
-        if (!selectedCard) return;
-
-        Gizmos.DrawCube(selectedCard.Anchor, selectedCard.GetComponent<BoxCollider>().bounds.size);
-
-        Gizmos.DrawLine(selectedCard.Anchor, HAD_MousePointer.Instance.InfoImpact.point);
+        //}
 
     }
 

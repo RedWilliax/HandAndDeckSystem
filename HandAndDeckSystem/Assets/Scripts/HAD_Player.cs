@@ -14,6 +14,7 @@ public class HAD_Player : MonoBehaviour
     [SerializeField, Range(1, 100)] int maxHandCard = 30;
 
     [SerializeField] Vector3 positionDeck = new Vector3(5, 0, 0);
+    [SerializeField] Vector3 positionDiscardPile = new Vector3(5, 0, 0);
 
     [Tooltip("This variable it's use when we select a card on a board")]
     [SerializeField] LayerMask layer = 0;
@@ -25,6 +26,7 @@ public class HAD_Player : MonoBehaviour
     #endregion
 
     Vector3 anchorDeck => gameObject.transform.position + positionDeck;
+    Vector3 anchorDiscardPile => gameObject.transform.position + positionDiscardPile;
 
     HAD_Hand hand = null;
 
@@ -35,6 +37,7 @@ public class HAD_Player : MonoBehaviour
     HAD_Card selectedCard = null;
 
     public HAD_Hand Hand => hand;
+    public HAD_Deck Deck => deck;
     public HAD_Deck DiscardPile => discardPile;
     public LayerMask Layer => layer;
     public HAD_Card SelectedCard => selectedCard;
@@ -54,6 +57,8 @@ public class HAD_Player : MonoBehaviour
         hand = new HAD_Hand(maxHandCard);
 
         deck = new HAD_Deck(maxDeckCard);
+
+        discardPile = new HAD_Deck(maxDeckCard);
 
         hand.OnDrawCard += SetPosHandCard;
         hand.OnTakeCard += SetPosHandCard;
@@ -84,6 +89,33 @@ public class HAD_Player : MonoBehaviour
         hand.AddCard(_cardToHad);
     }
 
+    public void DiscardCard(HAD_Card _card)
+    {
+        if (!_card) return;
+
+        _card.SetPositon(anchorDiscardPile);
+        _card.Owner.DiscardPile.AddCard(_card);
+        _card.Discard = true;
+
+        if (_card.ItsBoard)
+        {
+            _card.ItsBoard.RemoveCard(_card);
+            return;
+        }
+
+        if (_card.Owner.Hand.ExistCard(_card))
+        {
+            _card.Owner.Hand.RemoveCard(_card);
+            return;
+        }
+
+        if (_card.Owner.Deck.ExistCard(_card))
+            _card.Owner.Deck.RemoveCard(_card);
+
+
+
+    }
+
     void SetPosHandCard()
     {
         for (int i = 0; i < hand.CardQuantity; i++)
@@ -108,19 +140,6 @@ public class HAD_Player : MonoBehaviour
             selectedCard = null;
     }
 
-    void SelectTarget(bool _click)
-    {
-        if (!_click || !selectedCard) return;
-
-        HAD_Card _cardTarget = GetCard();
-
-        if (!_cardTarget) return;
-
-
-
-
-    }
-
     void UnSelectCard(bool _click)
     {
         if (!HAD_GameManager.Instance.IsMineTurn(this) || !_click) return;
@@ -134,7 +153,7 @@ public class HAD_Player : MonoBehaviour
         selectedCard = null;
     }
 
-    private HAD_Card GetCard()
+    HAD_Card GetCard()
     {
         if (Physics.Raycast(HAD_MousePointer.Instance.InfoImpact.point, -Vector3.up, out RaycastHit _raycastInfo, 10, layer))
         {
@@ -148,7 +167,7 @@ public class HAD_Player : MonoBehaviour
 
     }
 
-    private void ApplyDataOnCard(bool _hold)
+    void ApplyDataOnCard(bool _hold)
     {
         if (!_hold || !selectedCard) return;
 
@@ -156,10 +175,16 @@ public class HAD_Player : MonoBehaviour
 
         if (!_target || _target == selectedCard || _target.Owner == this || !_target.ItsBoard || _target.DataCard.CardType != ECardType.Unite) return;
 
-        Debug.Log(_target);
+        selectedCard.GetStat(ECardStat.Atck, out float _atckSelected);
 
+        _target.GetStat(ECardStat.Def, out float _defTarget);
 
+        float _result = _defTarget - _atckSelected;
 
+        if (_result < 0)
+            _target.SetStat(ECardStat.Life, -_result);
+
+        _target.SetStat(ECardStat.Def, _atckSelected);
 
     }
 
@@ -170,16 +195,18 @@ public class HAD_Player : MonoBehaviour
         GUILayout.BeginArea(new Rect(_position.x - 50, _position.y - 50, 100, 200));
 
         GUILayout.Label($"Deck : {deck.CardQuantity} / {deck.MaxCards}");
-
+        GUILayout.Label($"Discrad : {discardPile.CardQuantity} / {discardPile.MaxCards}");
         GUILayout.Label($"Hand : {hand.CardQuantity} / {hand.MaxCards}");
+
+        if (!hand.IsFull && GUILayout.Button("DrawCard"))
+            DrawCard();
 
         if (hand.IsFull)
             GUILayout.Label($"Hand is full !");
         else if (hand.IsEmpty)
             GUILayout.Label($"Hand is Empty.");
 
-        if (!hand.IsFull && GUILayout.Button("DrawCard"))
-            DrawCard();
+
 
         GUILayout.EndArea();
 
@@ -195,15 +222,16 @@ public class HAD_Player : MonoBehaviour
 
         Gizmos.DrawSphere(anchorDeck, 0.2f);
 
+        Gizmos.color = Color.magenta;
+
+        Gizmos.DrawSphere(anchorDiscardPile, 0.2f);
+
         Gizmos.color = Color.blue;
 
         Gizmos.DrawSphere(new Vector3(positionDebuger.x, 0.5f, positionDebuger.y), 0.05f);
 
         if (!selectedCard) return;
 
-        Gizmos.color = new Color(1, 0, 1, 0.2f);
-
-        Gizmos.DrawCube(selectedCard.transform.position, selectedCard.GetComponent<BoxCollider>().bounds.size);
         Gizmos.DrawLine(selectedCard.transform.position, HAD_MousePointer.Instance.MousePosition);
 
     }
